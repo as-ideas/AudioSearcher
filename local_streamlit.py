@@ -8,6 +8,8 @@ def mocksearch_service(text):
 
 def process_timestamps(ts_list):
     print('Getting ready to display your search results ..')
+    st.write('Here are the timestamps ..')
+    st.write([i[0] for i in ts_list])
 
 
 def audio(filename):
@@ -36,8 +38,7 @@ if __name__ == '__main__':
     icon("search")
     selected = st.text_input("", "Search...")  # searched text goes into this var
     button_clicked = st.button("OK")  # Bool Flag, indicates whether 'ok' button has been clicked
+    audio('/Users/tjain1/Downloads/STU1 MOD R rough.wav')
     if button_clicked:
         timestamp_list = mocksearch_service(selected)
         process_timestamps(timestamp_list)
-
-    audio('/Users/tjain1/Downloads/STU1 MOD R rough.wav')
