@@ -7,9 +7,12 @@ def mocksearch_service(text):
 
 
 def process_timestamps(ts_list):
-    print('Getting ready to display your search results ..')
-    st.write('Here are the timestamps ..')
-    st.write([i[0] for i in ts_list])
+    if ts_list:
+        print('Getting ready to display your search results ..')
+        st.write('Here are the timestamps ..')
+        st.write([i[0] for i in ts_list])
+    else:
+        st.write(f'Could not find what you were looking for ..')
 
 
 def audio(filename):
