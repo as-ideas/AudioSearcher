@@ -1,0 +1,4 @@
+transformers
+dataclasses
+librosa==0.7.2
+phonemizer==2.2.2
