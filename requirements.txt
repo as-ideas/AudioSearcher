@@ -1,2 +1,4 @@
 transformers
 dataclasses
+librosa==0.7.2
+#webrtcvad>=2.0.10
