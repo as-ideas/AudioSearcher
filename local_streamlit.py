@@ -1,5 +1,7 @@
 import streamlit as st
 
+from espeak_phonemizer import EspeakPhonemizer
+
 
 def mocksearch_service(text):
     print(f'Searching for {text}')
@@ -39,9 +41,12 @@ if __name__ == '__main__':
     remote_css('https://fonts.googleapis.com/icon?family=Material+Icons')
 
     icon("search")
-    selected = st.text_input("", "Search...")  # searched text goes into this var
+    query = st.text_input("", "Search...")  # searched text goes into this var
     button_clicked = st.button("OK")  # Bool Flag, indicates whether 'ok' button has been clicked
     audio('/Users/tjain1/Downloads/STU1 MOD R rough.wav')
+    espeak_phonemizer = EspeakPhonemizer()
+
     if button_clicked:
-        timestamp_list = mocksearch_service(selected)
+        phonemized_query = espeak_phonemizer(query, language='de')
+        timestamp_list = mocksearch_service(phonemized_query)
         process_timestamps(timestamp_list)
