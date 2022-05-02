@@ -14,7 +14,6 @@ if __name__ == '__main__':
     query = 'persönlich'
     query = espeak_phonemizer(query, language='de')
 
-
     transcription = transcriber(audio_input)
     res = searcher(transcription, query, language='de', max_char_errors=4)
 

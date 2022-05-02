@@ -1,5 +1,5 @@
+from fuzzysearch import find_near_matches
 from typing import List, Tuple
-import regex
 
 
 class Searcher:
@@ -23,9 +23,9 @@ class Searcher:
         reconstructed_sample = [x[0] for x in transcription]
         reconstructed_sample = ''.join(reconstructed_sample).lower()
 
-        query = regex.compile(query + '{' + f'e<={max_char_errors}' + '}')
+        matches = find_near_matches(query, reconstructed_sample, max_l_dist=max_char_errors)
         # do search
-        found_durations = [(m.start(0), m.end(0)) for m in regex.finditer(query, reconstructed_sample)]
+        found_durations = [(m.start, m.end) for m in matches]
 
         for duration in found_durations:
             start_pos, end_pos = duration
@@ -33,6 +33,7 @@ class Searcher:
             result_durations.append((durations[0], durations[-1]))
 
         return result_durations
+
 
 if __name__ == '__main__':
     sample_phonemized = [("h", 0.1), ("ə", 0.3), ("l", 0.5), ("ʊ", 0.7), (" ", 0.8),
