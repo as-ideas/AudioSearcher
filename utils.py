@@ -16,15 +16,8 @@ def search(transcription: str, query: str, language:str = "en") -> List:
     reconstructed_sample = [x[0] for x in transcription]
     reconstructed_sample = "".join(reconstructed_sample).lower()
 
-    # clean user input
-    cleaned_query = "".join([x for x in query.lower() if x.isalnum()])
-
-    # phonemize user query
-    espeak_phonemizer = EspeakPhonemizer()
-    phonemized_input = espeak_phonemizer(cleaned_query, language=language)
-
     # do search
-    found_durations = [(m.start(0), m.end(0)) for m in re.finditer(phonemized_input, reconstructed_sample)]
+    found_durations = [(m.start(0), m.end(0)) for m in re.finditer(query, reconstructed_sample)]
 
     for duration in found_durations:
         start_pos, end_pos = duration
@@ -36,7 +29,7 @@ def search(transcription: str, query: str, language:str = "en") -> List:
 if __name__ == '__main__':
     sample_phonemized = [("h", 0.1), ("ə", 0.3), ("l", 0.5), ("ʊ", 0.7), (" ", 0.8),
                          ("w", 0.3), ("ɜː", 0.5), ("l", 0.7), ("d", 0.8)]
-    query = "world"
+    query = "wɜːld"
 
     found_durations = search(sample_phonemized, query)
     print(found_durations)
