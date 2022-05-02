@@ -8,7 +8,7 @@ class Searcher:
                  transcription: List[Tuple[str, float]],
                  query: str,
                  language: str = 'en',
-                 max_char_errors: int = 3) -> List[Tuple[float, float]]:
+                 max_char_errors: int = 3) -> List[Tuple[float, float, float]]:
 
         """
         Search for the substring and return positions
@@ -25,12 +25,13 @@ class Searcher:
 
         matches = find_near_matches(query, reconstructed_sample, max_l_dist=max_char_errors)
         # do search
-        found_durations = [(m.start, m.end) for m in matches]
+        found_durations = [(m.start, m.end, m.dist) for m in matches]
 
         for duration in found_durations:
-            start_pos, end_pos = duration
+            start_pos, end_pos, dist = duration
             durations = [x[1] for x in transcription[start_pos:end_pos]]
-            result_durations.append((durations[0], durations[-1]))
+            sim = 1. - dist / len(query)
+            result_durations.append((durations[0], durations[-1], sim))
 
         return result_durations
 
@@ -38,7 +39,7 @@ class Searcher:
 if __name__ == '__main__':
     sample_phonemized = [("h", 0.1), ("ə", 0.3), ("l", 0.5), ("ʊ", 0.7), (" ", 0.8),
                          ("w", 0.3), ("ɜː", 0.5), ("l", 0.7), ("d", 0.8)]
-    query = "wɜːlz"
+    query = "wɜːld"
 
     searcher = Searcher()
     found_durations = searcher(sample_phonemized, query, max_char_errors=1)

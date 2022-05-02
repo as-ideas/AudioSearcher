@@ -11,11 +11,11 @@ if __name__ == '__main__':
     wav_file = '/Users/cschaefe/datasets/bild_snippets_cleaned/Snippets/r_0695_011.wav'
     audio_input, sample_rate = librosa.load(wav_file, sr=16000)
 
-    query = 'persönlich'
+    query = 'erde'
     query = espeak_phonemizer(query, language='de')
 
     transcription = transcriber(audio_input)
-    res = searcher(transcription, query, language='de', max_char_errors=4)
+    res = searcher(transcription, query, language='de', max_char_errors=2)
 
     print(res)
     # here goes search(query_phons, transcription) -> search_output

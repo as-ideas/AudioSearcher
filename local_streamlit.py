@@ -1,6 +1,9 @@
+import librosa
 import streamlit as st
 
 from espeak_phonemizer import EspeakPhonemizer
+from searcher import Searcher
+from transcriber import Transcriber
 
 
 def mocksearch_service(text):
@@ -12,7 +15,7 @@ def process_timestamps(ts_list):
     if ts_list:
         print('Getting ready to display your search results ..')
         st.write('Here are the timestamps ..')
-        st.write([i[0] for i in ts_list])
+        st.write([f'start: {start}, end: {end}, sim: {sim}' for start, end, sim in ts_list])
     else:
         st.write(f'Could not find what you were looking for ..')
 
@@ -36,6 +39,15 @@ def icon(icon_name):
     st.markdown(f'<i class="material-icons">{icon_name}</i>', unsafe_allow_html=True)
 
 
+wav_file = '/Users/cschaefe/datasets/bild_snippets_cleaned/Snippets/r_0695_011.wav'
+audio_input, sample_rate = librosa.load(wav_file, sr=16000)
+espeak_phonemizer = EspeakPhonemizer()
+transcriber = Transcriber()
+searcher = Searcher()
+transcribed = transcriber(audio_input)
+audio('/Users/cschaefe/datasets/bild_snippets_cleaned/Snippets/r_0695_011.wav')
+
+
 if __name__ == '__main__':
     local_css("style.css")
     remote_css('https://fonts.googleapis.com/icon?family=Material+Icons')
@@ -43,10 +55,11 @@ if __name__ == '__main__':
     icon("search")
     query = st.text_input("", "Search...")  # searched text goes into this var
     button_clicked = st.button("OK")  # Bool Flag, indicates whether 'ok' button has been clicked
-    audio('/Users/tjain1/Downloads/STU1 MOD R rough.wav')
-    espeak_phonemizer = EspeakPhonemizer()
 
     if button_clicked:
         phonemized_query = espeak_phonemizer(query, language='de')
-        timestamp_list = mocksearch_service(phonemized_query)
+        print(transcribed)
+        timestamp_list = searcher(transcribed, phonemized_query, language='de', max_char_errors=4)
+        timestamp_list.sort(key=lambda x: x[-1])
+        print(timestamp_list)
         process_timestamps(timestamp_list)
