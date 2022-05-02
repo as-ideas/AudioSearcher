@@ -80,7 +80,7 @@ class LongTranscriber:
 
         split_points = [0]
         for i in range(1, len(wav)):
-            if audio_mask[i] and not audio_mask[i-1] and i - split_points[-1] > 10000:
+            if audio_mask[i] and not audio_mask[i-1] and i - split_points[-1] > self.min_wav_piece_len:
                 split_points.append(i)
 
         split_points.append(len(wav))
