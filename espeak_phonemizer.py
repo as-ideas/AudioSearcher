@@ -16,5 +16,5 @@ class EspeakPhonemizer:
 
 if __name__ == '__main__':
     espeak_phonemizer = EspeakPhonemizer()
-    phones = espeak_phonemizer('Tanuj und Oleksi sind schlaue Säcke!', language='de')
+    phones = espeak_phonemizer('persönlich', language='de')
     print(phones)

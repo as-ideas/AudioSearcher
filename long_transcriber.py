@@ -85,6 +85,7 @@ class LongTranscriber:
 
         split_points.append(len(wav))
 
+        print(split_points)
         last_index = 0
         split_wavs = []
         for split_index in split_points[1:]:
@@ -96,7 +97,7 @@ class LongTranscriber:
 
 if __name__ == '__main__':
     transcriber = LongTranscriber()
-    wav_file = '/Users/cschaefe/datasets/bild_snippets_cleaned/Snippets/r_0695_011.wav'
+    wav_file = '/Users/cschaefe/datasets/bild_snippets_cleaned/Snippets/r_1110_003.wav'
     audio_input, sample_rate = librosa.load(wav_file, sr=16000)
 
     transcription = transcriber(audio_input)
