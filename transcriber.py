@@ -1,11 +1,7 @@
-# !pip install transformers
-# !pip install datasets
-from dataclasses import dataclass
-from pathlib import Path
-from typing import Dict, List, Tuple
+from typing import List, Tuple
 
-import numpy as np
 import librosa
+import numpy as np
 import torch
 from transformers import Wav2Vec2ForCTC, Wav2Vec2Processor
 
@@ -47,20 +43,11 @@ class Transcriber:
 
 
 if __name__ == '__main__':
-
     transcriber = Transcriber()
     wav_file = '/Users/cschaefe/datasets/bild_snippets_cleaned/Snippets/r_0695_011.wav'
     audio_input, sample_rate = librosa.load(wav_file, sr=16000)
 
     transcription = transcriber(audio_input)
 
-    print(transcription)
-
     for c, t in transcription:
         print(c, t)
-    #transcription = processor.decode(predicted_ids[0], clean_up_tokenization_spaces=False)
-    #transcription = transcription.replace(' ', '')
-
-    # FINE-TUNE
-    #print(wav_file)
-    #print(transcription)
