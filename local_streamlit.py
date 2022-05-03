@@ -1,5 +1,7 @@
 import librosa
 import streamlit as st
+import io
+from scipy.io.wavfile import write
 
 from espeak_phonemizer import EspeakPhonemizer
 from searcher import Searcher
@@ -26,6 +28,13 @@ def audio(filename):
     st.audio(audio_bytes, format='audio/ogg')
 
 
+def audio_wav(wav, sr=16000):
+    bytes_wav = bytes()
+    byte_io = io.BytesIO(bytes_wav)
+    write(byte_io, sr, wav)
+    st.audio(byte_io, format='audio/wav')
+
+
 def local_css(file_name):
     with open(file_name) as f:
         st.markdown(f'<style>{f.read()}</style>', unsafe_allow_html=True)
@@ -39,13 +48,13 @@ def icon(icon_name):
     st.markdown(f'<i class="material-icons">{icon_name}</i>', unsafe_allow_html=True)
 
 
-wav_file = '/Users/cschaefe/datasets/bild_snippets_cleaned/Snippets/r_0695_011.wav'
+wav_file = '/Users/cschaefe/datasets/bild_snippets_cleaned/Snippets/r_0367_046-r_0367_047.wav'
 audio_input, sample_rate = librosa.load(wav_file, sr=16000)
 espeak_phonemizer = EspeakPhonemizer()
 transcriber = Transcriber()
 searcher = Searcher()
 transcribed = transcriber(audio_input)
-audio('/Users/cschaefe/datasets/bild_snippets_cleaned/Snippets/r_0695_011.wav')
+audio(wav_file)
 
 
 if __name__ == '__main__':
@@ -58,8 +67,20 @@ if __name__ == '__main__':
 
     if button_clicked:
         phonemized_query = espeak_phonemizer(query, language='de')
-        print(transcribed)
-        timestamp_list = searcher(transcribed, phonemized_query, language='de', max_char_errors=4)
+        st.write(f'Looking for phonemes: {phonemized_query}')
+        phonemized_query = phonemized_query.replace(' ', '')
+
+        reconstructed_sample = [x[0] for x in transcribed]
+        reconstructed_sample = ''.join(reconstructed_sample).lower()
+        print(reconstructed_sample)
+
+        timestamp_list = searcher(transcribed, phonemized_query, language='de', max_char_errors=int(len(query) * 0.3))
         timestamp_list.sort(key=lambda x: x[-1])
         print(timestamp_list)
-        process_timestamps(timestamp_list)
+        if len(timestamp_list) == 0:
+            st.write(f'Could not find what you were looking for...')
+        for left, right, sim in timestamp_list:
+            st.write(f'similarity: {sim}, start: {left}, end: {right}')
+            left = int(left * 16000)
+            right = int(right * 16000)
+            audio_wav(audio_input[left:right])
