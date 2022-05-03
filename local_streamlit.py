@@ -78,7 +78,7 @@ if __name__ == '__main__':
 
     if button_de or button_en:
         language = 'de' if button_de else 'en'
-        phonemized_query = espeak_phonemizer(query, language='en')
+        phonemized_query = espeak_phonemizer(query, language=language)
         st.write(f'Looking for query: {query}, language: {language}, phonemes: {phonemized_query}')
         phonemized_query = phonemized_query.replace(' ', '')
 
