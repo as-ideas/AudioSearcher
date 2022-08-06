@@ -3,4 +3,4 @@ dataclasses
 librosa==0.7.2
 phonemizer==2.2.2
 fuzzysearch
-streamlit==1.8.1
+streamlit==1.11.1
